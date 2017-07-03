@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/fredssbr/building-blocks-of-express#readme",
   "dependencies": {
+    "body-parser": "^1.17.2",
     "express": "^4.15.3",
     "jquery": "^3.2.1"
   }

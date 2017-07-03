@@ -53,7 +53,39 @@ app.param('name', function(request, response, next){
     next();
 });
 
+/*
+Parsing form data depends on a middleware that is not shipped with express BODY-PARSER
+*/
+var bodyParser = require('body-parser');
+//Forces the use of native querystring NodeJS library
+var parseUrlEncoded = bodyParser.urlencoded({extended: false});
+
+/*
+Routes can take multiple handlers as arguments and will call them sequentially.
+Using multiple route handlers is useful for re-using middleware that loads resources, perform validation, authentication
+etc.
+ */
+app.post('/blocks', parseUrlEncoded, function(request, response){
+    /*
+     REQUEST.BODY has form data submitted
+     Each element of the form becomes a property in the body object
+     */
+    var newBlock = request.body;
+    blocks[newBlock.name] = newBlock.description;
+    //HTTP 201 Status - Created
+    response.status(201).json(newBlock.name);
+});
+
+app.delete('/blocks/:name', function(request, response){
+    delete blocks[request.blockName];
+    //The sendStatus function also sets the body to OK because some browsers or frameworks in JS can't handle an empty
+    //response body very well
+    response.sendStatus(200);
+});
+
+
 app.listen(3000, function () {
     console.log('Running express on port 3000');
 });
+
 
